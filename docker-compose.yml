@@ -1,0 +1,23 @@
+services:
+    email-service:
+      container_name: email-sender-service
+      build: ./.docker/php
+      restart: on-failure
+      working_dir: /var/www/email-sender-service
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      volumes:
+        - ./:/var/www/email-sender-service
+      environment:
+        APP_NAME: email-sender-service
+        APP_ENV: dev
+        PHP_IDE_CONFIG: "serverName=Project"
+        XDEBUG_SESSION: PHPSTORM
+      tty: true
+      stdin_open: true
+      networks:
+        - local_network
+
+networks:
+    local_network:
+      driver: bridge
