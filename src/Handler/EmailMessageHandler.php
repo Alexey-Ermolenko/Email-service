@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace App\Handler;
 
-use App\Message\SampleMessage;
+use App\Message\EmailMessage;
 use App\Service\EmailNotificatorService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class SampleMessageHandler
+class EmailMessageHandler
 {
     public function __construct(
         protected LoggerInterface $logger,
@@ -20,14 +20,14 @@ class SampleMessageHandler
     /**
      * @throws TransportExceptionInterface
      */
-    public function __invoke(SampleMessage $sampleMessage): void
+    public function __invoke(EmailMessage $sampleMessage): void
     {
         $jsonData = json_decode($sampleMessage->getContent(), true);
 
         $fromEmail = $jsonData['fromEmail'] ?? '';
         $toEmail = $jsonData['toEmail'] ?? '';
 
-        $this->notificator->sendEmail($fromEmail, $toEmail);
+        $this->notificator->sendNotificationEmail($fromEmail, $toEmail);
 
         $this->logger->info('Email from ' . $fromEmail . ' was sended to ' . $toEmail, ['app']);
     }

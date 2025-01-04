@@ -11,7 +11,7 @@ services:
       environment:
         APP_NAME: email-sender-service
         APP_ENV: dev
-        PHP_IDE_CONFIG: "serverName=Project"
+        PHP_IDE_CONFIG: "serverName=EmailService"
         XDEBUG_SESSION: PHPSTORM
       tty: true
       stdin_open: true

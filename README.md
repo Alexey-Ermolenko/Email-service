@@ -25,7 +25,7 @@ The project has a primitive architecture:
 ## Project installation
 1. Download the project
 2. Run the command ``make docker-build`` and ``make docker-exec`` for enter into to container
-3. Run `php bin/console messenger:consume -vv external_messages`
+3. Run `php bin/console messenger:consume -vv friend_request_messages email_messages`
 4. ??? 
 5. Profit
 

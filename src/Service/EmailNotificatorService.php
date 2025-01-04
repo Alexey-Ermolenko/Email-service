@@ -18,7 +18,60 @@ class EmailNotificatorService
     /**
      * @throws TransportExceptionInterface
      */
-    public function sendEmail(string $fromEmail, string $toEmail): void
+    private function sendEmail(array $emailParams): void
+    {
+        $email = (new Email())
+            ->from($emailParams['from'])
+            ->sender($emailParams['from'])
+            ->to($emailParams['to'])
+
+            ->priority(Email::PRIORITY_HIGH)
+            ->subject($emailParams['subject'])
+            ->html($emailParams['content']);
+
+        $this->mailer->send($email);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function sendUserFriendRequestEmail(array $userRequestData): void
+    {
+        $url = $userRequestData['acceptFriendUrl'];
+        $fromEmail = $userRequestData['user']['email'];
+        $toEmail = $userRequestData['toFriend']['email'];
+        $host = self::URL;
+
+        $html = <<<html
+        <!DOCTYPE html>
+        <html>
+            <head>
+            </head>
+            <body>
+                <center><h2>You have new frient request from $fromEmail</h2></center><br>
+                <center>
+                    <p>
+                        You can accept this request for adding new friend by click this url <a href="$url">$url</a>
+                    </p>
+                </center>
+                <br>
+                <p style="text-align: center;">Visit us at: <a href="$host">$host</a></p>
+            </body>
+        </html>
+        html;
+
+        $this->sendEmail([
+            'content' => $html,
+            'subject' => 'Friend Request',
+            'from' => $fromEmail,
+            'to' => $toEmail,
+        ]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function sendNotificationEmail(string $fromEmail, string $toEmail): void
     {
         $host = self::URL;
 
@@ -36,15 +89,11 @@ class EmailNotificatorService
             </html>
             html;
 
-        $email = (new Email())
-            ->from($fromEmail)
-            ->sender($fromEmail)
-            ->to($toEmail) // $toEmail //'a.o.ermolenko@gmail.com'
-
-            ->priority(Email::PRIORITY_HIGH)
-            ->subject('OK')
-            ->html($html);
-
-        $this->mailer->send($email);
+        $this->sendEmail([
+            'content' => $html,
+            'subject' => 'OK',
+            'from' => $fromEmail,
+            'to' => $toEmail,
+        ]);
     }
 }
